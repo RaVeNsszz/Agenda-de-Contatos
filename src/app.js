@@ -30,11 +30,16 @@ function updateContactsList() {
             const li = document.createElement('li');
             li.className = 'contact-item';
             
-            // Criar lista de linguagens como tags
-            const languagesHTML = contact.languages && contact.languages.length > 0 
-                ? contact.languages.map(lang => `<span class="language-tag">${lang}</span>`).join('')
-                : '<span>Nenhuma selecionada</span>';
+            // lista de linguagens como tags
+            let languagesHTML = '<span>Nenhuma selecionada</span>';
+            if (contact.languages && contact.languages.length > 0) {
+                languagesHTML = '';
+                for (let lang of contact.languages) {
+                    languagesHTML += `<span class="language-tag">${lang}</span>`;
+                }
+            }
             
+            // Conteúdo principal do contato
             li.innerHTML = `
                 <div class="contact-header">
                     <div class="contact-name">${contact.name}</div>
@@ -42,35 +47,41 @@ function updateContactsList() {
                         <button class="btn-danger" data-index="${index}">Excluir</button>
                     </div>
                 </div>
+
                 <div class="contact-details">
                     <div class="contact-field">
                         <div class="field-label">Telefone</div>
                         <div class="field-value">${contact.phone}</div>
                     </div>
+
                     <div class="contact-field">
                         <div class="field-label">Endereço</div>
                         <div class="field-value">${contact.address}</div>
                     </div>
+
                     <div class="contact-field">
                         <div class="field-label">Tipo de Moradia</div>
-                        <div class="field-value"><span class="housing-tag">${contact.housing}</span></div>
+                        <div class="field-value">
+                            <span class="housing-tag">${contact.housing}</span>
+                        </div>
                     </div>
+
                     <div class="contact-field">
                         <div class="field-label">Linguagens</div>
                         <div class="languages-list">${languagesHTML}</div>
                     </div>
                 </div>
+
                 ${contact.description ? `
                 <div class="description">
                     <div class="field-label">Descrição</div>
                     <div class="field-value">${contact.description}</div>
-                </div>
-                ` : ''}
+                </div>` : ''}
             `;
             contactsList.appendChild(li);
         });
         
-        // Adicionar event listeners aos botões de excluir
+        // Adiciona event listeners aos botões de excluir
         document.querySelectorAll('.btn-danger').forEach(button => {
             button.addEventListener('click', function() {
                 const index = parseInt(this.getAttribute('data-index'));
